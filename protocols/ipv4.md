@@ -1,11 +1,29 @@
 # IPv4
 
 
+```
+0         3          7                      15                                31
+|--------------------|----------------------|---------------------------------|
+| version | IHL      |   type of service    |  total length                   |
+|-----------------------------------------------------------------------------|
+| identification                            | flags |  fragment offset        |
+|-----------------------------------------------------------------------------|
+| time to live       | protocol             |   header checksum               |
+|-----------------------------------------------------------------------------|
+|                 source address                                              |
+|-----------------------------------------------------------------------------|
+|                 destination address                                         |
+|-----------------------------------------------------------------------------|
+|                 options                                  | padding          |
+|-----------------------------------------------------------------------------|
+
+
+```
 
 
 
 
-Protocol in C :
+**Protocol in C :**
 
 ```c
 
@@ -39,6 +57,63 @@ ipaddr_int = inet_addr("192.168.1.1");
 
 version is set to 4 for ipv4.
 
+IHL is length of internet header in 32 bit words. move offset to header length bytes give the data portion of the ipv4. min value of ihl is 5. that means 5 * 4 bytes = 20. maximum size can be 60 bytes and minium is 20 byte.
+
+**type of service:**
+
+
+
+```
+
+0               2     3     4     5    6    7
+|---------------|-----|-----|-----|----|----|
+| precedence    |  D  |  T  |  R  | 0  | 0  |
+|---------------|-----|-----|-----|----|----|
+
+```
+
+0 -2 is precedence: follows
+
+| **type** | **description** |
+|------|-------------|
+| 0    | routine     |
+| 1    | priority    |
+| 2    | immediate   |
+| 3    | flash       |
+| 4    | flash override |
+| 5    | critic/ecp  |
+| 6    | internetwork control |
+| 7    | network control |
+
+D - delay bit: 0 - normal delay, 1 - low delay
+T - throughput: 0 - normal throughput, 1 - high throughput
+R - reliability: 0 - normal reliability, 1 - high reliability
+
+
+**total length:**
+
+total length is the length of the datagram mesaured in octets, including the internet header and data. This field is 16 bit and thus 65535 size is acceptable.
+
+Preference of 576 bytes as default. It is receommended that hosts only send datagrams larger than 576 bytes if the destination is prepared to accept datagrams of larger.
+
+
+**identification:**
+
+set by the sender to assist in assmebling the packets at the receiver.
+
+
+**flags:** 3 bit
+
+| **bit** | **description** |
+|-----|-------------|
+| 0   | reserved, always 0 |
+| 1   | 0 - may be fragmented , 1 - do not frgament |
+| 2   | 0 - last fragment , 1 - more fragments |
+
+
+**fragment off:**
+
+this field is an offset from the big datagram that is sent by the sender. offset is measured in 8 bytes mutliples. the first fragment has offset 0.
 
 
 ### classes:
