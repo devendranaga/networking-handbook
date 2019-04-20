@@ -26,6 +26,14 @@ IP protocol field is set to 1 for icmp.
 
 **ip field settings for icmp**
 
+version: 4
+ihl: length of the header
+tos: 0 (default and normal)
+id, flags and fragoff: used in fragmentation
+ttl: 8 bit value
+protocol: 1 - icmp
+
+
 
 **c header**
 
@@ -34,16 +42,17 @@ IP protocol field is set to 1 for icmp.
 // icmp types
 typedef enum {
    DESTINATION_UNREACHABLE = 3,
+   TIME_EXCEEDED = 11,
 } icmp_type_t;
 
 // code values for destination field
 typedef enum {
-   DESTINATION_NET_UNREACHABLE = 0,
-   DESTINATION_HOST_UNREACHABLE = 1,
-   DESTINATION_PROTOCOL_UNREACHABLE = 2,
-   DESTINATION_PORT_UNREACHABLE = 3,
-   DESTINATION_FRAGMENT_IS_NEEDED_AND_DF_SET = 4,
-   DESTINATION_SOURCE_ROUTE_FAILED = 5,
+   DESTINATION_NET_UNREACHABLE = 0,  // from gateway
+   DESTINATION_HOST_UNREACHABLE = 1, // from gateway
+   DESTINATION_PROTOCOL_UNREACHABLE = 2, // from host
+   DESTINATION_PORT_UNREACHABLE = 3, // from host
+   DESTINATION_FRAGMENT_IS_NEEDED_AND_DF_SET = 4, // from gateway
+   DESTINATION_SOURCE_ROUTE_FAILED = 5, // from gateway
 } icmp_dest_code_t;
 
 typedef unsigned int icmp_code_t;
@@ -56,4 +65,9 @@ struct icmp_protocol {
 };
 
 ```
+
+**destination unreachable:**
+
+1. if do not fragment is set, but fragmentation is required, then the gateway would send destination unreachable.
+
 
