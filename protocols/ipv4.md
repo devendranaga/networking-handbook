@@ -1,5 +1,6 @@
 # IPv4
 
+**format of the ipv4 header:**
 
 ```
 0         3          7                      15                                31
@@ -20,6 +21,12 @@
 
 ```
 
+
+1. The packet contain the ipv4 header and the data portion (MTU - ipv4 header - lower layer headers).
+
+2. Each host is assigned 32 bit v4 address. L2 has the mac address of size 6 byte to identify the link layer.
+
+3. Each packet that are sent can be arrived in different order. Order must be guaranteed by the TCP
 
 
 **Protocol in C :**
@@ -112,7 +119,7 @@ set by the sender to assist in assmebling the packets at the receiver.
 | 2   | 0 - last fragment , 1 - more fragments |
 
 
-**fragment off:**
+**fragment off:** 13 bit
 
 this field is an offset from the big datagram that is sent by the sender. offset is measured in 8 bytes mutliples. the first fragment has offset 0.
 
@@ -129,9 +136,49 @@ The id of the packet must be unique for all the fragments of packet and for the 
 if the packet is not fragmented, then the last fragment is set to 0 and the fragment offset is set to 0.
 
 
+**time to live:** 8 bit field
+
+TTL is time to live - max is 255 seconds. The value is reduced by 1 at each router the packet traverses and if it goes 0 it will be discarded. This allows the packet to have some lifetime so that it does not overload / overrun the network with packets that keep hopping and does not reach  the destinations (if in case the destination is offline for example).
+
+
+**protocol:**
+
+**header checksum:**
+
+**source address:**
+
+**destination address:**
+
+**options:**
+
+
+
+
+
+
 
 
 ### classes:
+
+5 classes. Class A, B and C.
+
+Class A: Network.Host.Host.Host
+
+Class B: Network.Network.Host.Host
+
+Class C: Network.Network.Network.Host
+
+
+| Class | Format | Address Range | Max hosts |
+|-------|--------|---------------|-----------|
+| A     | N.H.H.H | 1.0.0.0 to 126.0.0.0 | 2^24 - 2 |
+| B     | N.N.H.H | 128.1.0.0 to 191.254.0.0 | 2^16 - 2 |
+| C     | N.N.N.H | 192.0.1.0 to 223.255.254.0 | NA |
+| D     | NA | 224.0.0.0 to 239.255.255.255 | NA |
+| E     | NA | 240.0.0.0 to 254.255.255.255 | NA |
+
+
+
 
 1.  multicast: 224.0.0.0 to 239.255.255.255 reserved for multicast
 2. 224.0.0.1 - for all systems on this subnet
