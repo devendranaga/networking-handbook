@@ -22,7 +22,6 @@
 
 
 
-
 **Protocol in C :**
 
 ```c
@@ -86,7 +85,9 @@ IHL is length of internet header in 32 bit words. move offset to header length b
 | 7    | network control |
 
 D - delay bit: 0 - normal delay, 1 - low delay
+
 T - throughput: 0 - normal throughput, 1 - high throughput
+
 R - reliability: 0 - normal reliability, 1 - high reliability
 
 
@@ -114,6 +115,20 @@ set by the sender to assist in assmebling the packets at the receiver.
 **fragment off:**
 
 this field is an offset from the big datagram that is sent by the sender. offset is measured in 8 bytes mutliples. the first fragment has offset 0.
+
+if a packet is marked dont fragment, it will not be fragmented under no circumstances. If the packet must be fragmented to be sent on the network, and dont fragment is set, then it will be discarded.
+
+to reassemble a fragment, it requries,
+
+1. the id field to be set same for a full packet and for all fragments for this packet.
+2. fragmentation offset and the length fields to determine the positon of the fragment within the packet and the lenght determine the total packet size
+3. the more fragment is set to 0 (bit 2) in flags so to indeicate that this is the last fragment.
+
+The id of the packet must be unique for all the fragments of packet and for the time till the packet is active on the wire.
+
+if the packet is not fragmented, then the last fragment is set to 0 and the fragment offset is set to 0.
+
+
 
 
 ### classes:
