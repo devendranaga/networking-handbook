@@ -34,6 +34,14 @@ ttl: 8 bit value
 protocol: 1 - icmp
 
 
+| ICMP type | ICMP code |
+|-----------|-----------|
+| 3 (Destination unreachable) | 0 (destination network unreachable |
+|                             | 1 ( host unreachable) |
+|                             | 2 ( protocol unrechable) |
+| 11 (time exceeded) | 0 (ttl exceeded in transit) |
+|                    | 1 (fragment reassembly exceeded) |
+
 
 **c header**
 
@@ -54,6 +62,12 @@ typedef enum {
    DESTINATION_FRAGMENT_IS_NEEDED_AND_DF_SET = 4, // from gateway
    DESTINATION_SOURCE_ROUTE_FAILED = 5, // from gateway
 } icmp_dest_code_t;
+
+// code values for time exceeded
+typedef enum {
+   TTL_EXCEEDED_IN_TRANSIT = 0,
+   TTL_FRAGMENT_REASSEMBLY_EXCEEDED = 1,
+} icmp_time_exceeded_code_t;
 
 typedef unsigned int icmp_code_t;
 
