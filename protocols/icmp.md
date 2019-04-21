@@ -39,6 +39,9 @@ protocol: 1 - icmp
 | 3 (Destination unreachable) | 0 (destination network unreachable |
 |                             | 1 ( host unreachable) |
 |                             | 2 ( protocol unrechable) |
+|                             | 3 ( port unreachable) |
+|                             | 4 ( fragment is neded and DF is set) |
+|                             | 5 ( source route failed ) |
 | 11 (time exceeded) | 0 (ttl exceeded in transit) |
 |                    | 1 (fragment reassembly exceeded) |
 
