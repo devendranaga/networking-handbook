@@ -66,6 +66,8 @@ typedef enum {
    REDIRECT_MESSAGE = 5,
    ECHO_REQUEST = 8,
    ECHO_REPLY = 0,
+   TIMESTAMP_REQUEST = 13,
+   TIMESTAMP_REPLY = 14,
 } icmp_type_t;
 
 
@@ -99,6 +101,10 @@ typedef enum {
 typedef enum {
     ECHO_CODE_NUM = 0,
 } icmp_echo_code_t;
+
+typedef enum {
+    TIMESTAMP_CODE_NUM = 0,
+} icmp_timestamp_code_t;
 
 typedef unsigned int icmp_code_t;
 
@@ -179,9 +185,26 @@ identifier may be 0 always but can be a port number of tcp / udp process on top.
 For each echo request packet, the sequence number is incremented and reply must contain same value without the increment. Sender must always increment.
 
 
+**timestamp request / reply messages:**
 
 
+```
 
+0           1          2                   3
+|-----------|----------|-------------------|
+| type      | code     | checksum          |
+|------------------------------------------|
+| identifier           | sequence number   |
+|------------------------------------------|
+| originate timestamp                      |
+|------------------------------------------|
+| receive timestamp                        |
+|------------------------------------------|
+| transmit timestamp                       |
+|------------------------------------------|
+
+
+```
 
 
 
