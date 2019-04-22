@@ -64,6 +64,8 @@ typedef enum {
    PARAMETER_PROBLEM = 12,
    SOURCE_QUENCH = 4,
    REDIRECT_MESSAGE = 5,
+   ECHO_REQUEST = 8,
+   ECHO_REPLY = 0,
 } icmp_type_t;
 
 
@@ -93,6 +95,10 @@ typedef enum {
 typedef enum {
     POINTER_INDICATION = 0,
 } icmp_parameter_problem_t;
+
+typedef enum {
+    ECHO_CODE_NUM = 0,
+} icmp_echo_code_t;
 
 typedef unsigned int icmp_code_t;
 
@@ -139,6 +145,38 @@ the value of source quench set to 0. if the gateway does not have enough resourc
 if the destination sees that source is transmitting packets too fast than it can process, it may send source quench until atleast the source reduces its speed to a value that where it does not receive source quench no longer. 
 
 **redirect message:**
+
+```
+
+0            1             2                  3
+|------------|-------------|------------------|
+| type       | code        | checksum         |
+|---------------------------------------------|
+| gateway internet address                    |
+|---------------------------------------------|
+
+```
+
+The gateway address is the address to which the traffic is redirected.
+
+If there is a nearest gateway that the host can communicate to (that is reducing the hops), then it would simply provide a redirect message to the host informing that the traffic is to be redirected to this gateway by specifying the "gateway address".
+
+**echo request / reply messages:**
+
+```
+
+0          1           2                      3
+|----------|-----------|----------------------|
+| type     | code      | checksum             |
+|---------------------------------------------|
+| identifier           | sequence number      |
+|---------------------------------------------|
+
+```
+
+identifier may be 0 always but can be a port number of tcp / udp process on top.
+
+For each echo request packet, the sequence number is incremented and reply must contain same value without the increment. Sender must always increment.
 
 
 
