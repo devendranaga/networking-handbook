@@ -68,6 +68,8 @@ typedef enum {
    ECHO_REPLY = 0,
    TIMESTAMP_REQUEST = 13,
    TIMESTAMP_REPLY = 14,
+   INFORMATION_REQ = 15,
+   INFORMATION_REP = 16,
 } icmp_type_t;
 
 
@@ -106,13 +108,37 @@ typedef enum {
     TIMESTAMP_CODE_NUM = 0,
 } icmp_timestamp_code_t;
 
+typedef enum {
+    INFORMATION_CODE_NUM = 0,
+} icmp_information_code_t;
+
 typedef unsigned int icmp_code_t;
 
 struct icmp_protocol {
     icmp_type_t type;
     icmp_code_t code;
     unsigned short checksum;
-    unsigned int unused;
+    union {
+        unsigned char pointer;
+        unsigned int gateway_internet_addr;
+        struct echo_req_reply {
+            unsigned short int identifier;
+            unsigned short int sequence_number;
+        } e_req_rep;
+        
+        struct timestamp_req_reply {
+            unsigned short int identifier;
+            unsigned short int sequence_number;
+            unsigned int originating_timestamp;
+            unsigned int receive_timestamp;
+            unsigned int transmit_timestamp;
+        } t_req_rep;
+        
+        struct information_req_reply {
+            unsigned short int identifier;
+            unsigned short int sequence_number;
+        } i_req_rep;
+    } ids;
 };
 
 ```
@@ -207,10 +233,36 @@ For each echo request packet, the sequence number is incremented and reply must 
 ```
 
 
+timestamps must be in the units of milliseconds from the UTC.
+
+If the timestamp is not availble as UTC, then any timestamp can be set but the higher order bit in the timestamp is set to indiciate the timestamp is non standard.
+
+the id and sequence numbers can be used to match the requests and replies with the timestamp.
+
+originating timestamp: timestamp of the message of the sender before it sent the message.
+
+receive timestamp: receiver when it receives this packet, timestamps it.
+
+transmit timestamp: receiver when it fills this packet back as timestamp reply, fills this.
 
 
+**information request, information reply messages:**
 
 
+```
+
+0            1          2                   3
+|------------|----------|-------------------|
+| type       | code     | checksum          |
+|-------------------------------------------|
+| identifier            | sequence number   |
+|-------------------------------------------|
+
+```
+
+the information request is to let the source know which network the destination is on.
+
+In an IP packet, the source fills in its address and sets the destination to 0, the receiver then sends a reply with its source and destination fields being set.
 
 
 
