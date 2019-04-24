@@ -143,17 +143,19 @@ struct icmp_protocol {
 
 ```
 
-**destination unreachable:**
+## explanation of type-code fields
+
+1. **destination unreachable:**
 
 1. if do not fragment is set, but fragmentation is required, then the gateway would send destination unreachable.
 
-**time exceeded:**
+2. **time exceeded:**
 
 1. if ttl is 0 at intermediate gateway, it is then discarded and the gateway will send with time exceeded.
 2. if there is no fragment 0, then no time exceeded need to be sent.
 3. if a host reassembling the fragments, cannot able to assemble all the fragments within its time, it discards the packet and then sends out a time exceeded.
 
-**parameter problem:**
+3. **parameter problem:**
 
 1. in case of parameter problem, the 1st byte of the unused portion 32 bit block is used as a pointer.
 
@@ -170,13 +172,13 @@ struct icmp_protocol {
 when gateway processing the received ip packet, finds an issues with the header elements in the ip packet, it then marks them using the pointer describing where in the byte exactly the problem is.
 
 
-**source quench:**
+4. **source quench:**
 
 the value of source quench set to 0. if the gateway does not have enough resources to process the packet, it may discard and for each discarded packet, it sends a source quench message.
 
 if the destination sees that source is transmitting packets too fast than it can process, it may send source quench until atleast the source reduces its speed to a value that where it does not receive source quench no longer. 
 
-**redirect message:**
+5. **redirect message:**
 
 ```
 
@@ -193,7 +195,7 @@ The gateway address is the address to which the traffic is redirected.
 
 If there is a nearest gateway that the host can communicate to (that is reducing the hops), then it would simply provide a redirect message to the host informing that the traffic is to be redirected to this gateway by specifying the "gateway address".
 
-**echo request / reply messages:**
+6. **echo request / reply messages:**
 
 ```
 
@@ -211,7 +213,7 @@ identifier may be 0 always but can be a port number of tcp / udp process on top.
 For each echo request packet, the sequence number is incremented and reply must contain same value without the increment. Sender must always increment.
 
 
-**timestamp request / reply messages:**
+7. **timestamp request / reply messages:**
 
 
 ```
@@ -246,7 +248,7 @@ receive timestamp: receiver when it receives this packet, timestamps it.
 transmit timestamp: receiver when it fills this packet back as timestamp reply, fills this.
 
 
-**information request, information reply messages:**
+8. **information request, information reply messages:**
 
 
 ```
