@@ -33,6 +33,12 @@
 
 ```c
 
+#define IPV4_VERSION 4
+
+#define IHL_CONV_FACTOR 4
+#define IHL_LEN_MIN (5 * IHL_CONV_FACTOR)
+#define IHL_LEN_MAX (15 * IHL_CONV_FACTOR)
+
 struct ipv4 {
     uint8_t version;
     uint8_t internet_header_len;
